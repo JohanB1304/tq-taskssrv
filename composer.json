@@ -1,5 +1,5 @@
 {
-    "name": "tasks/tasks",
+    "name": "tq-taskssrv/tq-taskssrv",
     "description": "Componente tareas",
     "license": "MIT",
     "autoload": {
