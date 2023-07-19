@@ -212,4 +212,232 @@ The following endpoints are going to be available four its usage:
   "status_code": "400",
   "message": "Bad request"
 }
+```
 
+- Reorder tasks:
+  Description: Reorder tasks manually.
+  Method: POST</br>
+  Path: api/{slug_tenant}/task/store-order</br>
+  Parameters:
+    - slug_tenant: Slug tenant of the authenticated user.
+  </br>
+  Request body:
+```json
+{
+	"tasks":[
+		"9993d3a9-bbf5-4825-9b7e-c59bf04e36ed",
+		"9993e038-2052-4ead-a6df-c8787b23dd04",
+		"9993e0a4-6a03-4744-a37e-81594ddd1b80",
+		"9993e0e7-e6af-40c5-8e42-128d4c1ec69f",
+		"9993dea5-a456-4270-a52a-cc4d7eaed028",
+		"9993deee-23b1-423d-87be-9ffb64d27919",
+		"9993df99-99c2-46a3-9a3b-fce89af2a1f9",
+		"9993d400-6685-4569-9d83-cdeee06cf32d"
+	]
+}
+```
+  Responses:
+      200:
+```json
+{
+    "status_code": "200",
+    "message": "ok"
+}
+```
+    400:
+```json
+{
+  "status_code": "400",
+  "message": "Bad request"
+}
+```
+
+- Verify specific task:
+  Method: POST</br>
+  Path: api/{slug_tenant}/task/{ref_id}/{task_id}/verify</br>
+  Parameters:
+    - slug_tenant: Slug tenant of the authenticated user.
+    - ref_id: Ids of the associated reference entities to the annotation, two uuids that 
+    must be separated with '|'.
+    - task_id: Task id to update
+  </br>
+  Request body:
+```json
+{
+    "status": true
+}
+```
+  Responses:
+      200:
+```json
+{
+"data": {
+    "id": "999563d5-d1e6-406d-a3f4-424f161c832d",
+    "title": "Primera prueba",
+    "description": "Prueba",
+    "followup_notes": "Prueba seguimiento ejecución",
+    "followup_file": null,
+    "verification_notes": "Prueba verificación",
+    "verification_file": "1688669109_file.gif",
+    "date_start": "2023-07-06",
+    "date_due": "2023-07-07",
+    "responsable": null,
+    "tag_id": null,
+    "tag_label": null,
+    "type_tag": null,
+    "reopened": false,
+    "disabled": false,
+    "status": true,
+    "verified": true
+},
+"status_code": "200",
+"message": "ok"
+}
+```
+    400:
+```json
+{
+  "status_code": "400",
+  "message": "Bad request"
+}
+```
+
+- Disable specific task:
+  Method: POST</br>
+  Path: api/{slug_tenant}/task/{ref_id}/{task_id}/disable</br>
+  Parameters:
+    - slug_tenant: Slug tenant of the authenticated user.
+    - ref_id: Ids of the associated reference entities to the annotation, two uuids that 
+    must be separated with '|'.
+    - task_id: Task id to update
+  </br>
+  Request body:
+```json
+{
+	"justification": "Justificación"
+}
+```
+  Responses:
+      200:
+```json
+{
+"data": [
+    {
+        "id": "999563d5-d1e6-406d-a3f4-424f161c832d",
+        "title": "Primera prueba",
+        "description": "Prueba",
+        "followup_notes": "Prueba seguimiento ejecución",
+        "followup_file": null,
+        "verification_notes": "Prueba verificación",
+        "verification_file": "1688669109_file.gif",
+        "date_start": "2023-07-06",
+        "date_due": "2023-07-07",
+        "responsable": null,
+        "tag_id": null,
+        "tag_label": null,
+        "type_tag": null,
+        "reopened": false,
+        "disabled": false,
+        "status": true,
+        "verified": false
+    }
+],
+"status_code": "200",
+"message": "ok"
+}
+```
+    400:
+```json
+{
+  "status_code": "400",
+  "message": "Bad request"
+}
+```
+
+- Get total complete tasks</br>
+  Method: GET</br>
+  Path: api/{slug_tenant}/task/{ref_id}/get_qty_complete_tasks</br>
+  Parameters:
+    - slug_tenant: Slug tenant of the authenticated user.
+    - ref_id: Ids of the associated reference entities to the annotation, two uuids that 
+    must be separated with '|'.
+  </br>
+  Responses:
+      200:
+```json
+{
+	"pending_tasks": 7,
+	"status_code": "200",
+	"message": "ok"
+}
+```
+    400:
+```json
+{
+  "status_code": "400",
+  "message": "Bad request"
+}
+```
+
+- Index tags</br>
+  Method: GET</br>
+  Path: api/{slug_tenant}/task/{ref_id}/tags/available</br>
+  Parameters:
+    - slug_tenant: Slug tenant of the authenticated user.
+    - ref_id: Ids of the associated reference entities to the annotation, two uuids that 
+    must be separated with '|'.
+    - search: Query param for searching tags by name.
+  </br>
+  Responses:
+      200:
+```json
+{
+	"data": [
+		{
+			"id": "999549ac-39d6-4d89-b294-b9132da32bae",
+			"label": "Prueba 1",
+			"type": null
+		}
+	],
+	"status_code": "200",
+	"message": "ok"
+}
+```
+    400:
+```json
+{
+  "status_code": "400",
+  "message": "Bad request"
+}
+```
+
+- List associated tags</br>
+  Method: GET</br>
+  Path: api/{slug_tenant}/task/{ref_id}/tags</br>
+  Parameters:
+    - slug_tenant: Slug tenant of the authenticated user.
+    - ref_id: Ids of the associated reference entities to the annotation, two uuids that 
+    must be separated with '|'.
+  </br>
+  Responses:
+      200:
+```json
+{
+	"data": [
+		{
+			"id": "999549ac-39d6-4d89-b294-b9132da32bae",
+			"label": "Prueba 1",
+			"type": null
+		}
+	],
+	"status_code": "200",
+	"message": "ok"
+}
+```
+    400:
+```json
+{
+  "status_code": "400",
+  "message": "Bad request"
+}
+```
