@@ -44,18 +44,6 @@ class TasksServiceProvider extends ServiceProvider
         );
     }
 
-    private function loadControllers()
-    {
-        $this->loadMigrationsFrom(__DIR__ . '/Http/Controllers/TasksController.php');
-
-        $this->publishes(
-            [
-                __DIR__ . '/Http/Controllers/TasksController.php' => base_path('app/Http/Controllers/TasksController.php'),
-            ],
-            'annotations-package'
-        );
-    }
-
     private function loadModels()
     {
         $this->publishes(
