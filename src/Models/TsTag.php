@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Throwable;
 
 class TsTag extends Model
 {
@@ -38,9 +39,30 @@ class TsTag extends Model
     ];
 
     public function index($search){
-        return self::where('label', 'LIKE', "%$search%")
-            ->orWhere('type', 'LIKE', "%$search%")
-            ->get(['guid as id', 'label', 'type as type']);
+        try{
+            $count = 0;
+            $tags = self::where('label', 'LIKE', "%$search%")
+                ->orWhere('type', 'LIKE', "%$search%")
+                ->get(['guid as id', 'label as name', 'type as type_tag']);
+            
+            $types = explode("|", config('task.tags_classes'));
+            foreach($types as $class){
+                $model = new $class();
+                $type = $model->getTable();
+                $query = $class::where('name', 'LIKE', "%$search%")
+                    ->select('guid as id', 'name');
+                $data[$count] = $query->addSelect(DB::raw("'$type' as type_tag"))->get();
+                if($count>0){
+                    $data[$count] = $data[$count]->mergeRecursive($data[$count-1])->all();
+                }
+                $count+=1;
+            }
+            $tags = $tags->mergeRecursive($data[$count-1]);
+            return $tags->all();
+        }catch(Throwable $e){
+            return false;
+        }
+        
     }
 
     public function store($request){

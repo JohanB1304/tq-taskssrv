@@ -65,7 +65,7 @@ class TsTasks extends Model
         return $this->belongsToMany(TsTag::class,'ts_tasks_has_tags', 'task_id',
             'tag_id')
             // ->using(TaskHasObjects::class)
-            ->withPivot(['status','tenant_id'])
+            ->withPivot(['type','status','tenant_id'])
             ->withTimestamps();
     }
 
@@ -296,8 +296,16 @@ class TsTasks extends Model
         TsTasksHasTags::where('task_id', $task->guid)->delete();
         if(!is_null($tag)){
             $tag = $tag;
+            $type = $this->getTypeTag($tag);
             if(!is_null(TsTag::where('guid', $tag)->first())){
                 $task->tags()->attach($tag,[
+                    'type' => $type,
+                    'status' => 'active',
+                    'tenant_id' => $task->tenant_id
+                ]);
+            }else if(!is_null($tag)){
+                $task->tags()->attach($tag,[
+                    'type' => $type,
                     'status' => 'active',
                     'tenant_id' => $task->tenant_id
                 ]);
@@ -348,6 +356,24 @@ class TsTasks extends Model
         //         'type_object_1.default_name as type_object_name',
         //     );
 
+    }
+
+    public function getTypeTag($tag){
+        $classes = explode("|", config('task.tags_classes'));
+
+        foreach($classes as $class){
+            $type = $class::where('guid',$tag)->first();
+            if(is_null($type)){
+                $type = $class::whereUuid($tag)->first();
+            }
+            $model = $class;
+            if(!is_null($type)){
+                break 1;
+            }
+        }
+        
+        $table = $model->getTable();
+        return substr($table, strpos($table, "_") + 1);
     }
 
 }

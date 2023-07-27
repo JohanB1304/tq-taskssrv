@@ -13,6 +13,7 @@ return new class extends Migration
             $table->uuid('task_id')->index('idx_task_id');
             $table->uuid('tag_id')->index('isx_tag_id');
             $table->string('reference_entity', 255)->nullable();
+            $table->string('type', 255)->nullable();
             $table->text('status',16);
             $table->string('created_by', 64)->nullable();
             $table->string('updated_by', 64)->nullable();

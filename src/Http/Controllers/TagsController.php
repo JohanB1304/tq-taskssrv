@@ -8,9 +8,16 @@ use Illuminate\Http\Request;
 class TagsController
 {
     public function index(Request $request){
-        $tags = new TsTag();
+        $tag = new TsTag();
+        $tags = $tag->index($request->search);
+        if($tags==false){
+            return response()->json([
+                'status_code' => '400',
+                'message' => 'Modelo no encontrado'
+            ]);
+        }
         return response()->json([
-            'data' => $tags->index($request->search),
+            'data' => $tags,
             'status_code' => '200',
             'message' => 'ok'
         ]);
